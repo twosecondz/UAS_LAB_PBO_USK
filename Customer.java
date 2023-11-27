@@ -1,0 +1,7 @@
+/**
+ * Customer
+ */
+class Customer {
+
+    
+}

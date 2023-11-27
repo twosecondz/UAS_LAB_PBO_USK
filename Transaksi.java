@@ -1,0 +1,6 @@
+/**
+ * Transaksi
+ */
+class Transaksi {
+    
+}

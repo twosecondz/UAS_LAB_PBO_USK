@@ -1,0 +1,7 @@
+/**
+ * Invoice
+ */
+class Invoice {
+
+    
+}
