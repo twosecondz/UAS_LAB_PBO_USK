@@ -1,10 +1,15 @@
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Admin
  */
-class Admin {
+class Admin extends Akun {
     private String username;
     private String password;
-    
+    private static Map<String, Akun> akunDatabase = new HashMap<>();
+
+
     public Admin(String username, String password) {
         this.username = username;
         this.password = password;
@@ -14,27 +19,32 @@ class Admin {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public boolean login(String inputUsername, String inputPassword) {
+        return username.equals(inputUsername) && password.equals(inputPassword);
     }
 
-    public void tambahBarang() {
-        
+    public void addProduk() {
+        System.out.println("Berhasil menambahkan produk");
     }
 
-    public void hapusBarang() {
-        
+    public void deleteProduk() {
+        System.out.println("Berhasil menghapus produk");
     }
 
-    public void editBarang() {
-        
+    public void editProduk() {
+        System.out.println("Berhasil mengedit produk");
+    }
+
+    public void seeTransaction() {
+        System.out.println("Berhasil melihat transaksi");
+    }
+
+    public void acceptTransaction() {
+        System.out.println("Berhasil menerima transaksi");
     }
 }

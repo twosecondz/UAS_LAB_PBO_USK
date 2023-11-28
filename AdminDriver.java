@@ -9,6 +9,10 @@ class AdminDriver {
     public ArrayList<Transaksi> listTransaksi;
     
     public AdminDriver() {
-        
+        akun.addProduk();
+        akun.deleteProduk();
+        akun.editProduk();
+        akun.seeTransaction();
+        akun.acceptTransaction();
     }
 }

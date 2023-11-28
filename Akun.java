@@ -1,55 +1,44 @@
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * Akun
  */
 public class Akun {
     private String id;
-    private String username;
-    private String password;
-    private static Map<String, Akun> akunDatabase = new HashMap<>();
+    private Admin admin;
+    private Map<String, String> akunDatabase = new HashMap<>();
 
-    public Akun(String id, String username, String password) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
+    public Map<String, String> getAkunDatabase() {
+        return akunDatabase;
     }
 
-    public String getId() {
-        return id;
+    public void createAccount(String role, String idPrefix, String username, String password) {
+        String id = idPrefix + "-" + username;
+        akunDatabase.put(id, password);
+        System.out.println("\nAkun berhasil dibuat!");
+        System.out.println("ID Anda: " + id);
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public static void createAccount(String id, String username, String password) {
-        Akun akun = new Akun(id, username, password);
-        akunDatabase.put(username, akun);
-        System.out.println("Akun berhasil dibuat.");
-
-        // Menulis ulang database ke file setiap kali ada perubahan
-        writeDatabaseToFile();
-    }
-
-    private static void writeDatabaseToFile() {
-        try (FileWriter writer = new FileWriter("akun_database.txt")) {
-            for (Akun akun : akunDatabase.values()) {
-                writer.write(akun.getId() + "," + akun.getUsername() + "," + akun.getPassword() + "\n");
-            }
+    private void saveToFileAdmin(String id, String password, String username) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("Database/akunAdmin.txt", true))) {
+            writer.println(id + "," + password + "," + username);
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Gagal menyimpan akun ke dalam file.");
         }
     }
 
-    public static Map<String, Akun> getAkunDatabase() {
-        return akunDatabase;
+    public boolean login(String username, String password) {
+        for (Map.Entry<String, String> entry : akunDatabase.entrySet()) {
+            if (entry.getKey().endsWith("-" + username) && entry.getValue().equals(password)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
