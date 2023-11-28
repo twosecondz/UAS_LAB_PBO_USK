@@ -1,7 +1,8 @@
+import java.util.ArrayList;
 /**
  * Keranjang
  */
-class Keranjang {
 
-    
+public class Keranjang {
+    public ArrayList<Barang> barang;
 }
