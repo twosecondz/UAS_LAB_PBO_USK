@@ -1,12 +1,23 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Kelas Customer merupakan turunan dari kelas User dan mewakili pengguna dengan peran customer
+ * pada program shopping.
+ */
 class Customer extends User {
     List<Product> cart;
     List<Transaction> transactionHistory;
     Scanner scanner = new Scanner(System.in);
 
+     /**
+     * Konstruktor untuk membuat objek Customer dengan username dan password.
+     *
+     * @param username Username customer.
+     * @param password Password customer.
+     */
     Customer(String username, String password) {
         super(username, password);
         cart = new ArrayList<>();
@@ -14,37 +25,64 @@ class Customer extends User {
         scanner = new Scanner(System.in);
     }
 
+    /**
+     * Menampilkan daftar produk kepada customer.
+     *
+     * @param productList Daftar produk yang tersedia.
+     */
     void viewProducts(List<Product> productList) {
-        System.out.println("List Barang:");
+        Main.clearScreen();
+        System.out.println( "<".repeat(25) + "LIST BARANG " + ">".repeat(25));
+        System.out.println();
         for (Product product : productList) {
-            System.out.println("- " + product.name + " (ID: " + product.id + ", Price: " + product.price + ")");
+            System.out.println("\nNama Barang : " + product.name);
+            System.out.println("ID          : " + product.id);
+            System.out.println("Harga       : Rp." + product.price);
         }
     }
 
+    /**
+     * Menambahkan produk ke dalam keranjang belanja.
+     *
+     * @param product Produk yang akan ditambahkan ke keranjang.
+     */
     void addToCart(Product product) {
         cart.add(product);
         System.out.println(product.name + " ditambahkan ke dalam keranjang.");
     }
 
+    /**
+     * Menampilkan isi keranjang belanja customer.
+     */
     void viewCart() {
-        System.out.println("Keranjang Belanja:");
+        Main.clearScreen();
+        System.out.println( "<".repeat(25) + " KERANJANG BELANJA " + ">".repeat(25));
+        System.out.println();
         for (Product product : cart) {
-            System.out.println("- " + product.name + " (ID: " + product.id + ", Price: " + product.price + ")");
+            System.out.println("\nNama Barang : " + product.name);
+            System.out.println("ID          : " + product.id);
+            System.out.println("Harga       : Rp." + product.price);
         }
-        System.out.println("Total Items in Cart: " + cart.size());
+        System.out.println("\nTotal item di keranjang : " + cart.size());
     }
 
+    /**
+     * Melakukan proses checkout dengan memilih produk dari keranjang.
+     *
+     * @param payment           Metode pembayaran yang dipilih.
+     * @param transactionList   Daftar transaksi yang akan diperbarui.
+     */
     void checkout(Payment payment, List<Transaction> transactionList) {
         if (cart.isEmpty()) {
-            System.out.println("Keranjang belanja kosong. Tidak ada barang untuk checkout.");
+            System.out.println("\nKeranjang belanja kosong. Tidak ada barang untuk checkout.");
             return;
         }
 
-        System.out.println("Keranjang Belanja Anda");
+        System.out.println("<".repeat(15) + " KERANJANG BELANJA ANDA " + ">".repeat(15));
+        System.out.println();
         viewCart();
 
-        System.out
-                .print("Pilih produk untuk checkout (masukkan ID atau ketik 'selesai' untuk menyelesaikan checkout): ");
+        System.out.print("\nPilih produk untuk checkout (masukkan ID barang) : ");
         String selectedProductId = scanner.next();
 
         List<Product> selectedProducts = new ArrayList<>();
@@ -56,49 +94,70 @@ class Customer extends User {
                 selectedProducts.add(selectedProduct);
                 System.out.println(selectedProduct.name + " ditambahkan ke dalam daftar checkout.");
             } else {
-                System.out.println("Produk dengan ID " + selectedProductId + " tidak ditemukan dalam keranjang.");
+                System.out.println("\nProduk dengan ID " + selectedProductId + " tidak ditemukan dalam keranjang.");
             }
 
-            System.out.print("Pilih produk lain atau ketik 'selesai': ");
+            System.out.println();
+            System.out.print("Pilih produk lain atau ketik 'selesai' : ");
             selectedProductId = scanner.next();
         }
 
         if (selectedProducts.isEmpty()) {
-            System.out.println("Tidak ada produk yang dipilih untuk checkout.");
+            System.out.println("\nTidak ada produk yang dipilih untuk checkout.");
             return;
         }
 
         Transaction transaction = new Transaction(this, new ArrayList<>(cart), payment);
-        System.out.println("Total Harga: " + transaction.getTotalAmount());
+        System.out.println("Total Harga : " + transaction.getTotalAmount());
         transactionList.add(transaction);
         transactionHistory.add(transaction);
         // Memanggil metode processPayment untuk mengeksekusi logika pembayaran
         transaction.processPayment();
-        System.out.println("Transaksi berhasil!");
+        System.out.println("\nTransaksi berhasil !");
         transaction.cetakResi(); // Menambah pemanggilan cetakResi()
         cart.clear();
     }
 
+    /**
+     * Menampilkan opsi transfer bank kepada customer.
+     */
     void displayBankOptions() {
-        System.out.println("Pilih Bank:");
-        System.out.println("1. BSI");
-        System.out.println("2. Mandiri");
-        System.out.println("3. Bank Aceh");
-        System.out.println("4. BCA");
-        System.out.print("Masukkan pilihan (1/2/3/4): ");
+        Main.clearScreen();
+        System.out.println("<".repeat(25) + " TRANSFER BANK " + ">".repeat(25));
+        System.out.println();
+        System.out.println("=".repeat(35));
+        System.out.println("|            Pilih Bank           |");
+        System.out.println("=".repeat(35));
+        System.out.println("| 1. BSI                          |");
+        System.out.println("| 2. Mandiri                      |");
+        System.out.println("| 3. Bank Aceh                    |");
+        System.out.println("| 4. BCA                          |");
+        System.out.println("=".repeat(35));
+        System.out.print("Masukkan pilihan (1/2/3/4) : ");
     }
 
+     /**
+     * Menampilkan riwayat belanja customer.
+     */
     void viewHistory() {
-        System.out.println("History Belanja:");
+        Main.clearScreen();
+        System.out.println("<".repeat(15) + " RIWAYAT BELANJA " + ">".repeat(15));
+        System.out.println();
         for (Transaction transaction : transactionHistory) {
-            System.out.println("ID Transaksi: " + transaction.id);
-            System.out.println("Jumlah Barang: " + transaction.products.size());
-            System.out.println("Total Harga: " + transaction.totalAmount);
-            System.out.println("Metode Pembayaran: " + transaction.payment);
-            System.out.println("--------------");
+            System.out.println("ID Transaksi : " + transaction.id);
+            System.out.println("Jumlah Barang : " + transaction.products.size());
+            System.out.println("Total Harga : " + transaction.totalAmount);
+            System.out.println("Metode Pembayaran : " + transaction.payment);
         }
     }
 
+    /**
+     * Mendapatkan objek produk berdasarkan ID dari daftar produk.
+     *
+     * @param productList Daftar produk yang tersedia.
+     * @param productId   ID produk yang dicari.
+     * @return Objek Product jika ditemukan, atau null jika tidak ditemukan.
+     */
     private Product getProductById(List<Product> productList, String productId) {
         return productList.stream()
                 .filter(product -> product.id.equals(productId))
@@ -107,126 +166,206 @@ class Customer extends User {
     }
 }
 
+/**
+ * Interface Authentication menyediakan metode untuk proses otentikasi,
+ * khususnya untuk login dengan menggunakan username dan password.
+ */
 interface Authentication {
+
+    // Memeriksa apakah kombinasi username dan password valid untuk proses login.
     boolean login(String username, String password);
 }
 
+/**
+ * Kelas User merepresentasikan entitas pengguna dalam sistem.
+ * Implementasi Authentication untuk proses otentikasi login.
+ */
 class User implements Authentication {
-    String username;
-    String password;
+    String username;    // Variable untuk menampung username user
+    String password;    // Variable untuk menampung password user
 
+    // Konstruktor untuk membuat objek User dengan username dan password tertentu.
     User(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
+    /**
+     * Implementasi metode login dari antarmuka Authentication.
+     * Memeriksa apakah kombinasi username dan password valid untuk login.
+     */
     @Override
     public boolean login(String username, String password) {
         return this.username.equals(username) && this.password.equals(password);
     }
 }
 
+/**
+ * Kelas Admin adalah turunan dari kelas User dan digunakan untuk mengelola barang
+ * dan melihat daftar transaksi. Admin memiliki akses ke beberapa menu pengelolaan
+ * seperti menambah, melihat, mengedit, dan menghapus barang serta melihat daftar transaksi.
+ */
 class Admin extends User {
     static Scanner scanner = new Scanner(System.in);
 
+    // Konstruktor untuk membuat objek Admin dengan username dan password tertentu.
     Admin(String username, String password) {
         super(username, password);
     }
 
+    /**
+     * Metode untuk mengelola barang dan menu administrasi.
+     *
+     * @param productList      Daftar produk yang akan dikelola.
+     * @param transactionList  Daftar transaksi yang akan dilihat.
+     */
+    void manageProducts(List<Product> productList, List<Transaction> transactionList) {
+        boolean isManagingProducts = true;
+        
+        while (isManagingProducts) {
+
+            // Tampilan menu admin
+            System.out.println();
+            System.out.println("<".repeat(25) + " ADMIN MENU " + ">".repeat(25));
+            System.out.println();
+            System.out.println("=".repeat(36));
+            System.out.println("|   Menu Admin - Manage Products   |");
+            System.out.println("=".repeat(36));
+            System.out.println("| 1. Tambah Barang                 |");
+            System.out.println("| 2. Lihat Barang                  |");
+            System.out.println("| 3. Edit Barang                   |");
+            System.out.println("| 4. Hapus Barang                  |");
+            System.out.println("| 5. Lihat Transaksi               |");
+            System.out.println("| 6. Kembali ke menu utama         |");
+            System.out.println("=".repeat(36));
+            System.out.print("Pilih opsi (1/2/3/4/5/6) : ");
+            int option = scanner.nextInt();
+            
+            // Switch case untuk memproses pilihan user admin
+            switch (option) {
+                case 1:
+                addProduct(productList);
+                break;
+                case 2:
+                viewProducts(productList);
+                break;
+                case 3:
+                editProduct(productList);
+                break;
+                case 4:
+                deleteProduct(productList);
+                break;
+                case 5:
+                viewTransactions(transactionList);
+                break;
+                case 6:
+                isManagingProducts = false;
+                break;
+                default:
+                System.out.println("\nOpsi tidak valid.");
+            }
+        }
+    }
+    
+    /**
+     * Metode untuk menambahkan barang baru ke dalam daftar produk.
+     *
+     * @param productList Daftar produk yang akan diperbarui dengan barang baru.
+     */
     void addProduct(List<Product> productList) {
-        System.out.print("Enter product ID: ");
+        Main.clearScreen();
+        System.out.println("<".repeat(15) + " PENAMBAHAN BARANG " + ">".repeat(15));
+        System.out.println();
+        System.out.print("Masukkan ID barang    : ");
         String productId = scanner.next();
         scanner.nextLine();
-        System.out.print("Enter product name: ");
+        System.out.print("Masukkan nama barang  : ");
         String productName = scanner.nextLine();
-        System.out.print("Enter product price: ");
+        System.out.print("Masukkan harga barang : ");
         int productPrice = scanner.nextInt();
 
         Product newProduct = new Product(productId, productName, productPrice);
         productList.add(newProduct);
-        System.out.println("Product added successfully!");
+        System.out.println("\nBarang berhasil ditambahkan !");
     }
 
-    void manageProducts(List<Product> productList, List<Transaction> transactionList) {
-        boolean isManagingProducts = true;
-
-        while (isManagingProducts) {
-            System.out.println("\nMenu Admin - Manage Products:");
-            System.out.println("1. Add Product");
-            System.out.println("2. View Products");
-            System.out.println("3. Edit Product");
-            System.out.println("4. Delete Product");
-            System.out.println("5. View Transactions");
-            System.out.println("6. Back to Main Menu");
-            System.out.print("Choose option (1/2/3/4/5/6): ");
-            int option = scanner.nextInt();
-
-            switch (option) {
-                case 1:
-                    addProduct(productList);
-                    break;
-                case 2:
-                    viewProducts(productList);
-                    break;
-                case 3:
-                    editProduct(productList);
-                    break;
-                case 4:
-                    deleteProduct(productList);
-                    break;
-                case 5:
-                    viewTransactions(transactionList);
-                    break;
-                case 6:
-                    isManagingProducts = false;
-                    break;
-                default:
-                    System.out.println("Invalid option.");
-            }
-        }
-    }
-
+    /**
+     * Metode untuk melihat daftar produk.
+     *
+     * @param productList Daftar produk yang akan ditampilkan.
+     */
     private void viewProducts(List<Product> productList) {
-        System.out.println("List of Products:");
+        Main.clearScreen();
+        System.out.println();
+        System.out.println("<".repeat(15) + " LIST BARANG " + ">".repeat(15));
         for (Product product : productList) {
-            System.out.println("- " + product.name + " (ID: " + product.id + ", Price: " + product.price + ")");
+            System.out.println("\nNama Barang : " + product.name);
+            System.out.println("ID          : " + product.id);
+            System.out.println("Harga       : Rp." + product.price);
         }
     }
 
+    /**
+     * Metode untuk mengedit barang dalam daftar produk.
+     *
+     * @param productList Daftar produk yang akan diperbarui setelah pengeditan.
+     */
     private void editProduct(List<Product> productList) {
-        System.out.print("Enter product ID to edit: ");
+        Main.clearScreen();
+        System.out.println();
+        System.out.println("<".repeat(15) + " PENGEDITAN BARANG " + ">".repeat(15));
+        System.out.println();
+        System.out.print("Masukkan ID barang untuk edit barang : ");
         String productId = scanner.next();
         scanner.nextLine();
         Product productToEdit = getProductById(productList, productId);
 
+        // Permisalan jika user meng input id barang yang barangnya tidak ada dan ada
         if (productToEdit != null) {
-            System.out.print("Enter new product name: ");
+            System.out.print("Masukkan nama barang baru : ");
             String newProductName = scanner.nextLine();
-            System.out.print("Enter new product price: ");
+            System.out.print("Masukkan harga barang baru : ");
             int newProductPrice = scanner.nextInt();
 
             productToEdit.name = newProductName;
             productToEdit.price = newProductPrice;
 
-            System.out.println("Product edited successfully!");
+            System.out.println("\nBarang berhasil di edit !");
         } else {
-            System.out.println("Product not found.");
+            System.out.println("\nBarang tidak ditemukan.");
         }
     }
 
+    /**
+     * Metode untuk menghapus barang dari daftar produk.
+     *
+     * @param productList Daftar produk yang akan diperbarui setelah penghapusan.
+     */
     private void deleteProduct(List<Product> productList) {
-        System.out.print("Enter product ID to delete: ");
+        Main.clearScreen();
+        System.out.println();
+        System.out.println("<".repeat(15) + " PENGHAPUSAN BARANG " + ">".repeat(15));
+        System.out.println();
+        System.out.print("Masukkan ID barang untuk hapus barang : ");
         String productId = scanner.next();
         Product productToDelete = getProductById(productList, productId);
 
+        // Permisalan jika user meng input id barang yang barangnya tidak ada dan ada
         if (productToDelete != null) {
             productList.remove(productToDelete);
-            System.out.println("Product deleted successfully!");
+            System.out.println("\nBarang berhasil dihapus !");
         } else {
-            System.out.println("Product not found.");
+            System.out.println("\nBarang tidak ditemukan.");
         }
     }
 
+    /**
+     * Metode untuk mendapatkan objek Product berdasarkan ID dari daftar produk.
+     *
+     * @param productList Daftar produk yang akan dicari.
+     * @param productId   ID produk yang akan dicari.
+     * @return Objek Product yang sesuai dengan ID atau null jika tidak ditemukan.
+     */
     private Product getProductById(List<Product> productList, String productId) {
         return productList.stream()
                 .filter(product -> product.id.equals(productId))
@@ -234,22 +373,32 @@ class Admin extends User {
                 .orElse(null);
     }
 
+    /**
+     * Metode untuk melihat daftar transaksi.
+     *
+     * @param transactionList Daftar transaksi yang akan ditampilkan.
+     */
     private void viewTransactions(List<Transaction> transactionList) {
-        System.out.println("List of Transactions:");
+        System.out.println();
+        System.out.println("<".repeat(10) + " DAFTAR TRANSAKSI " + ">".repeat(10));
         for (Transaction transaction : transactionList) {
-            System.out.println("Transaction ID: " + transaction.id);
-            System.out.println("User: " + transaction.user.username);
-            System.out.println("Payment Method: " + transaction.payment);
-            System.out.println("--------------");
+            System.out.println("\nID Transaksi : " + transaction.id);
+            System.out.println("User : " + transaction.user.username);
+            System.out.println("Metode Bayar : " + transaction.payment);
         }
     }
 }
 
+/**
+ * Kelas Product merepresentasikan barang yang dapat dibeli atau dikelola dalam sistem.
+ * Setiap produk memiliki ID unik, nama, dan harga.
+ */
 class Product {
-    String id;
-    String name;
-    int price;
+    String id;   // Variable id unik untuk mengidentifikasi barang
+    String name; // Variable nama barang
+    int price;   // Variable harga barang
 
+    // Konstruktor untuk membuat objek Product dengan ID, nama, dan harga tertentu.
     Product(String id, String name, int price) {
         this.id = id;
         this.name = name;
@@ -257,18 +406,25 @@ class Product {
     }
 }
 
+/**
+ * Kelas Transaction merepresentasikan transaksi pembelian barang oleh pengguna.
+ * Setiap transaksi memiliki ID unik, pengguna yang melakukan transaksi, daftar barang,
+ * metode pembayaran, dan total jumlah pembelian.
+ */
 class Transaction {
-    static int counter = 1;
-    int id;
-    User user;
-    List<Product> products;
-    Payment payment;
-    int totalAmount;
+    static int counter = 1;   // Variable statis untuk menghitung jumlah transaksi dan id unik
+    int id;                   // Variable id untuk mengidentifikasi transaksi
+    User user;                // Variable user untuk yang melakukan transaksi    
+    List<Product> products;   // Variable daftar barang yang dibeli dalam transaksi    
+    Payment payment;          // Variable metode pembayaran yang digunakan dalam transaksi
+    int totalAmount;          // Variable total jumlah pembelian dalam transaksi
 
+    // Mendapatkan total jumlah pembelian dalam transaksi.
     int getTotalAmount() {
         return totalAmount;
     }
 
+    // Konstruktor untuk membuat objek Transaction dengan pengguna, daftar barang, dan metode pembayaran tertentu.
     Transaction(User user, List<Product> products, Payment payment) {
         this.id = counter++;
         this.user = user;
@@ -277,92 +433,157 @@ class Transaction {
         this.totalAmount = calculateTotalAmount();
     }
 
+    /**
+     * Menghitung total jumlah pembelian berdasarkan daftar barang dalam transaksi.
+     * @return Total jumlah pembelian.
+     */
     private int calculateTotalAmount() {
         return products.stream().mapToInt(product -> product.price).sum();
     }
 
+    // Memproses pembayaran menggunakan metode pembayaran yang telah dipilih.
     void processPayment() {
         // Memanggil metode processPayment pada objek Payment
         payment.processPayment();
     }
 
+    // Mencetak struk pembayaran transaksi dengan detail pengguna, daftar barang, total jumlah pembelian, dan pesan terima kasih.
     void cetakResi() {
+        Main.clearScreen();
+        System.out.println();
+        System.out.println("<".repeat(10) + " STRUK PEMBAYARAN " + ">".repeat(10));
+        System.out.println();
         System.out.println("Resi Transaksi #" + id);
-        System.out.println("----------------------------");
+        System.out.println("-".repeat(35));
         System.out.println("User: " + user.username);
         System.out.println("Metode Pembayaran: " + payment);
-        System.out.println("----------------------------");
+        System.out.println("-".repeat(35));
         System.out.println("List Barang:");
 
         for (Product product : products) {
-            System.out.println("- " + product.name + " (ID: " + product.id + ", Price: " + product.price + ")");
+            System.out.println("\nNama Barang : " + product.name);
+            System.out.println("ID          : " + product.id);
+            System.out.println("Harga       : Rp." + product.price);
         }
 
-        System.out.println("----------------------------");
+        System.out.println("-".repeat(35));
         System.out.println("Total Harga: " + totalAmount);
-        System.out.println("----------------------------");
-        System.out.println("<<<< Terima kasih telah berbelanja di ICESCAPE >>>>");
+        System.out.println("-".repeat(35));
+        System.out.println("<".repeat(25) + "Terima kasih telah berbelanja di ICESCAPE" + ">".repeat(25));
+        System.out.println();
     }
 }
 
+
+/**
+ * Kelas abstrak Payment merepresentasikan suatu metode pembayaran yang dapat diimplementasikan
+ * oleh kelas-kelas turunannya. Metode pembayaran umumnya memiliki proses pembayaran yang berbeda-beda.
+ * Kelas ini dirancang untuk memberikan kerangka dasar untuk implementasi metode pembayaran.
+ */
 abstract class Payment {
+
+    /**
+     * Metode abstrak yang harus diimplementasikan oleh kelas turunan.
+     * Metode ini digunakan untuk menjalankan proses pembayaran sesuai dengan aturan metode pembayaran tertentu.
+     */
     abstract void processPayment();
 }
 
+
+/**
+ * Kelas QRIS merupakan turunan dari kelas Payment dan mengimplementasikan metode pembayaran
+ * menggunakan QRIS.
+ * Metode pembayaran ini hanya menampilkan pesan bahwa pembayaran sedang diproses menggunakan QRIS.
+ */
 class QRIS extends Payment {
+
+    /**
+     * Implementasi metode processPayment untuk melakukan pembayaran menggunakan QRIS.
+     * Metode ini hanya mencetak pesan bahwa pembayaran sedang diproses menggunakan QRIS.
+     */
     @Override
     void processPayment() {
-        System.out.println("Memproses pembayaran menggunakan QRIS...");
-        // Implementasi logika pembayaran QRIS
+        System.out.println("\nMemproses pembayaran menggunakan QRIS...");
     }
 
+    // Metode override dari toString untuk memberikan representasi string dari objek QRIS.
     public String toString() {
         return "QRIS";
     }
 }
 
+/**
+ * Kelas Bank merupakan turunan dari kelas Payment dan menyediakan metode pembayaran melalui suatu bank.
+ * Kelas ini memperoleh nama bank pada saat pembuatan objek dan menggunakan nama tersebut
+ * dalam proses pembayaran dan representasi string.
+ */
 class Bank extends Payment {
-    String bankName;
+    String bankName;  // Variable untuk nama bank yang digunakan untuk pembayaran
 
+    // Konstruktor untuk membuat objek Bank dengan menyimpan nama bank.
     Bank(String bankName) {
         this.bankName = bankName;
     }
 
+    /**
+     * Implementasi metode processPayment untuk melakukan pembayaran melalui bank.
+     * Metode ini mencetak pesan bahwa pembayaran sedang diproses melalui bank tertentu.
+     */
     @Override
     void processPayment() {
-        System.out.println("Memproses pembayaran melalui Bank " + bankName + "...");
-        // Implementasi logika pembayaran Bank
+        System.out.println("\nMemproses pembayaran melalui Bank " + bankName + "...");
     }
 
+    // Metode override dari toString untuk memberikan representasi string dari objek Bank.
     public String toString() {
         return "Bank " + bankName;
     }
 }
 
+/**
+ * Kelas COD (Cash on Delivery) merupakan turunan dari kelas Payment dan menyediakan metode pembayaran tunai.
+ * Kelas ini mengimplementasikan proses pembayaran tunai dan memberikan representasi string "COD".
+ */
 class COD extends Payment {
+
+    /**
+     * Implementasi metode processPayment untuk melakukan pembayaran tunai (Cash on Delivery/COD).
+     * Metode ini mencetak pesan bahwa pembayaran sedang diproses secara tunai.
+     */
     @Override
     void processPayment() {
-        System.out.println("Memproses pembayaran tunai (Cash on Delivery/COD)...");
-        // Implementasi logika pembayaran COD
+        System.out.println("\nMemproses pembayaran tunai (Cash on Delivery/COD)...");
     }
 
+    // Metode override dari toString untuk memberikan representasi string dari objek COD.
     public String toString() {
         return "COD";
     }
-
 }
 
+/**
+ * Kelas utama yang menjalankan aplikasi ICESCAPE Shopping System.
+ * Digunakan untuk menangani login, manajemen pengguna, dan interaksi dengan produk serta transaksi.
+ */
 public class Main {
     static Scanner scanner = new Scanner(System.in);
 
-    void login() {
+    // Metode utama yang memulai aplikasi dan memanggil fungsi login.
+    public static void main(String[] args) {
+        Main main = new Main();
+        main.login();
+    }
+
+    // Fungsi untuk menangani login dan menu utama aplikasi.
+    public void login() {
         List<Product> productList = new ArrayList<>();
         List<Transaction> transactionList = new ArrayList<>();
-        List<Customer> customerList = new ArrayList<>();
-
+        List<Customer> customerList = new ArrayList<>(); 
+        
         Admin admin = new Admin("admin", "adminpass");
         Customer customer = new Customer("user", "userpass");
 
+        // Menambahkan data barang
         productList.add(new Product("A01", "Paracetamol", 2000));
         productList.add(new Product("A02", "Ibu Profen", 2600));
         productList.add(new Product("A03", "Aspirin", 20000));
@@ -383,100 +604,132 @@ public class Main {
         productList.add(new Product("D03", "Diclofenac", 12451));
         productList.add(new Product("D04", "Betamethasone", 3716));
         productList.add(new Product("D05", "Neomycin Ointment", 20900));
-
+        
         boolean isLoggedIn = true;
 
         while (isLoggedIn) {
-            System.out.println("<<< Selamat datang di ICESCAPE Shopping System >>>");
-            System.out.println("1. Login sebagai Admin");
-            System.out.println("2. Login sebagai Customer");
-            System.out.println("3. Buat Akun Customer");
-            System.out.println("4. Keluar dari aplikasi");
-            System.out.print("Pilih opsi (1/2/3/4): ");
+            
+            // Tampilan menu awal
+            clearScreen();
+            System.out.println();
+            System.out.println("<".repeat(25) + " Selamat datang di ICESCAPE Shopping System " + ">".repeat(25));
+            System.out.println();
+            System.out.println("=".repeat(35));
+            System.out.println("|               Menu              |");
+            System.out.println("=".repeat(35));
+            System.out.println("| 1. Login sebagai Admin          |");
+            System.out.println("| 2. Login sebagai Customer       |");
+            System.out.println("| 3. Buat Akun Customer           |");
+            System.out.println("| 4. Keluar dari aplikasi         |");
+            System.out.println("=".repeat(35));
+            System.out.print("Pilih opsi (1/2/3/4) : ");
             int option = scanner.nextInt();
 
+            // Switch case untuk memproses pilihan user
             switch (option) {
                 case 1:
+                    clearScreen();
                     isLoggedIn = adminLogin(admin, productList, transactionList);
                     break;
                 case 2:
+                    clearScreen();
                     isLoggedIn = customerLogin(customer, productList, transactionList);
                     break;
                 case 3:
+                    clearScreen();
                     createAccount(customerList, productList, transactionList);
                     break;
                 case 4:
                     isLoggedIn = false;
-                    System.out.println("Logging out");
+                    System.out.println("\nLogging out");
                     break;
                 default:
-                    System.out.println("Opsi tidak valid.");
+                    System.out.println("\nOpsi tidak valid.");
             }
         }
     }
 
-    public static void main(String[] args) {
-        Main main = new Main();
-        main.login();
-    }
-
+    // Fungsi untuk melakukan login sebagai admin.
     private static boolean adminLogin(Admin admin, List<Product> productList, List<Transaction> transactionList) {
         boolean isLoggedIn = false;
 
         do {
-            System.out.print("Enter username: ");
+            System.out.println();
+            System.out.println("<".repeat(25) + " LOGGIN AS ADMIN " + ">".repeat(25));
+            System.out.println();
+            System.out.print("Enter username : ");
             String username = scanner.next();
-            System.out.print("Enter password: ");
+            System.out.print("Enter password : ");
             String password = scanner.next();
 
+            // Mengecek kebenaran username dan password admin
             if (admin.login(username, password)) {
+                clearScreen();
                 admin.manageProducts(productList, transactionList);
                 isLoggedIn = true;
             } else {
-                System.out.println("Login gagal. Username atau password salah.");
+                System.out.println("\nLogin gagal. Username atau password salah.");
             }
         } while (!isLoggedIn);
 
         return isLoggedIn;
     }
 
+    // Fungsi untuk melakukan login sebagai customer.
     private static boolean customerLogin(Customer customer, List<Product> productList,
-            List<Transaction> transactionList) {
+        List<Transaction> transactionList) {
         boolean isLoggedIn = false;
 
         do {
-            System.out.print("Enter username: ");
+            System.out.println();
+            System.out.println("<".repeat(25) + " LOGGIN AS CUSTOMER " + ">".repeat(25));
+            System.out.println();
+            System.out.print("Enter username : ");
             String username = scanner.next();
-            System.out.print("Enter password: ");
+            System.out.print("Enter password : ");
             String password = scanner.next();
 
+            // Mengecek kebenaran username dan password customer
             if (customer.login(username, password)) {
+                clearScreen();
                 customerMenu(customer, productList, transactionList);
                 isLoggedIn = true;
             } else {
-                System.out.println("Login gagal. Username atau password salah.");
+                System.out.println("\nLogin gagal. Username atau password salah.");
             }
         } while (!isLoggedIn);
 
         return isLoggedIn;
     }
 
+    /**
+     * Fungsi untuk membuat akun pelanggan baru dan menambahkannya ke dalam daftar pelanggan.
+     * Setelah membuat akun, fungsi ini secara otomatis melakukan login menggunakan akun baru tersebut.
+     */
     private static void createAccount(List<Customer> customerList, List<Product> productList,
-            List<Transaction> transactionList) {
-        System.out.println("Membuat Akun Baru:");
-
-        System.out.print("Enter username: ");
+        List<Transaction> transactionList) {
+        
+        clearScreen();
+        System.out.println();
+        System.out.println("<".repeat(10) + " Create new account " + ">".repeat(10));
+        System.out.println();
+        System.out.print("Enter username : ");
         String username = scanner.next();
-        System.out.print("Enter password: ");
+        System.out.print("Enter password : ");
         String password = scanner.next();
 
         Customer newCustomer = new Customer(username, password);
         customerList.add(newCustomer);
 
-        System.out.println("Akun berhasil dibuat. Silakan login untuk melanjutkan.");
+        System.out.println("\nAkun berhasil dibuat. Silakan login untuk melanjutkan.");
         customerLogin(newCustomer, productList, transactionList);
     }
 
+    /**
+     * Fungsi untuk menampilkan menu utama dan mengelola interaksi pelanggan dengan aplikasi.
+     * Pengguna dapat melihat daftar barang, menambahkan barang ke keranjang, melihat keranjang,
+     * melakukan proses checkout, melihat riwayat belanja, dan kembali ke menu utama.
+     */
     private static void customerMenu(Customer customer, List<Product> productList, List<Transaction> transactionList) {
         boolean isLoggedIn = true;
 
@@ -484,22 +737,36 @@ public class Main {
         Payment payment = new QRIS();
 
         while (isLoggedIn) {
-            System.out.println("\nMenu Customer:");
-            System.out.println("1. Lihat List Barang");
-            System.out.println("2. Masukkan Barang ke Keranjang");
-            System.out.println("3. Lihat Keranjang");
-            System.out.println("4. Checkout");
-            System.out.println("5. Lihat History Belanja");
-            System.out.println("6. Kembali ke menu utama");
-            System.out.print("Pilih opsi (1/2/3/4/5/6): ");
+
+            // Tamppilan menu customer
+            System.out.println();
+            System.out.println("<".repeat(25) + " MENU CUSTOMER " + ">".repeat(25));
+            System.out.println();
+            System.out.println("=".repeat(35));
+            System.out.println("|          Menu Customer          |");
+            System.out.println("=".repeat(35));
+            System.out.println("| 1. Lihat List Barang            |");
+            System.out.println("| 2. Masukkan Barang ke Keranjang |");
+            System.out.println("| 3. Lihat Keranjang              |");
+            System.out.println("| 4. Checkout                     |");
+            System.out.println("| 5. Lihat History Belanja        |");
+            System.out.println("| 6. Kembali ke menu utama        |");
+            System.out.println("=".repeat(35));
+            System.out.print("Pilih opsi (1/2/3/4/5/6) : ");
             int option = scanner.nextInt();
 
+            // Switch case untuk memproses pilihan user 
             switch (option) {
                 case 1:
                     customer.viewProducts(productList);
                     break;
                 case 2:
-                    System.out.print("Enter product ID to add to cart: ");
+                    clearScreen();
+                    customer.viewProducts(productList);
+                    System.out.println();
+                    System.out.println("<".repeat(25) + " ADD BARANG KE KERANJANG " + ">".repeat(25));
+                    System.out.println();
+                    System.out.print("Masukkan ID barang untuk menambahkannya ke keranjang : ");
                     String productId = scanner.next();
                     Product selectedProduct = productList.stream()
                             .filter(product -> product.id.equals(productId))
@@ -509,7 +776,7 @@ public class Main {
                     if (selectedProduct != null) {
                         customer.addToCart(selectedProduct);
                     } else {
-                        System.out.println("Product not found.");
+                        System.out.println("\nBarang tidak ditemukan.");
                     }
                     break;
                 case 3:
@@ -517,11 +784,17 @@ public class Main {
                     break;
                 case 4:
                     // Pilihan metode pembayaran
-                    System.out.println("Pilih metode pembayaran:");
-                    System.out.println("1. QRIS");
-                    System.out.println("2. Bank");
-                    System.out.println("3. COD");
-                    System.out.print("Masukkan pilihan (1/2/3): ");
+                    clearScreen();
+                    System.out.println("<".repeat(25) + " CHECKOUT " + ">".repeat(25));
+                    System.out.println();
+                    System.out.println("=".repeat(35));
+                    System.out.println("|     Pilih metode pembayaran     |");
+                    System.out.println("=".repeat(35));
+                    System.out.println("| 1. QRIS                         |");
+                    System.out.println("| 2. Bank                         |");
+                    System.out.println("| 3. COD                          |");
+                    System.out.println("=".repeat(35));
+                    System.out.print("Masukkan pilihan (1/2/3) : ");
                     int paymentOption = scanner.nextInt();
 
                     // Set objek pembayaran berdasarkan pilihan
@@ -547,7 +820,7 @@ public class Main {
                                     payment = new Bank("BCA");
                                     break;
                                 default:
-                                    System.out.println("Pilihan bank tidak valid.");
+                                    System.out.println("\nPilihan bank tidak valid.");
                                     return;
                             }
                             break;
@@ -555,7 +828,7 @@ public class Main {
                             payment = new COD();
                             break;
                         default:
-                            System.out.println("Pilihan metode pembayaran tidak valid.");
+                            System.out.println("\nPilihan metode pembayaran tidak valid.");
                             break;
                     }
 
@@ -567,11 +840,20 @@ public class Main {
                     break;
                 case 6:
                     isLoggedIn = false;
-                    System.out.println("Logging out..");
+                    System.out.println("\nLogging out..");
                     break;
                 default:
-                    System.out.println("Opsi tidak valid.");
+                    System.out.println("\nOpsi tidak valid.");
             }
+        }
+    }
+
+    // Method untuk membersihkan layar ketika di enter
+    public static void clearScreen() {
+        try {
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
