@@ -4,7 +4,21 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Kelas Customer merupakan turunan dari kelas User dan mewakili pengguna dengan peran customer
+ * Online Shopping with Java
+ * Sistem perbelanjaan dibuat dengan menggunakan interface CLI (Command Line Interface)
+ *
+ * @author M. Syahidal Akbar Zas
+ * @author Farhanul Khair
+ * @author Nazwa Salsabila
+ * @version 99.0
+ * @since 2023-12-01
+ * 
+ * https://github.com/twosecondz/UAS_LAB_PBO_USK
+ */
+
+/**
+ * Kelas Customer merupakan turunan dari kelas User dan mewakili pengguna dengan
+ * peran customer
  * pada program shopping.
  */
 class Customer extends User {
@@ -12,7 +26,7 @@ class Customer extends User {
     List<Transaction> transactionHistory;
     Scanner scanner = new Scanner(System.in);
 
-     /**
+    /**
      * Konstruktor untuk membuat objek Customer dengan username dan password.
      *
      * @param username Username customer.
@@ -32,7 +46,7 @@ class Customer extends User {
      */
     void viewProducts(List<Product> productList) {
         Main.clearScreen();
-        System.out.println( "<".repeat(25) + "LIST BARANG " + ">".repeat(25));
+        System.out.println("<".repeat(25) + "LIST BARANG " + ">".repeat(25));
         System.out.println();
         for (Product product : productList) {
             System.out.println("\nNama Barang : " + product.name);
@@ -48,7 +62,7 @@ class Customer extends User {
      */
     void addToCart(Product product) {
         cart.add(product);
-        System.out.println(product.name + " ditambahkan ke dalam keranjang.");
+        System.out.println(product.name + " telah ditambahkan ke keranjang.");
     }
 
     /**
@@ -56,7 +70,7 @@ class Customer extends User {
      */
     void viewCart() {
         Main.clearScreen();
-        System.out.println( "<".repeat(25) + " KERANJANG BELANJA " + ">".repeat(25));
+        System.out.println("<".repeat(25) + " KERANJANG BELANJA " + ">".repeat(25));
         System.out.println();
         for (Product product : cart) {
             System.out.println("\nNama Barang : " + product.name);
@@ -69,8 +83,8 @@ class Customer extends User {
     /**
      * Melakukan proses checkout dengan memilih produk dari keranjang.
      *
-     * @param payment           Metode pembayaran yang dipilih.
-     * @param transactionList   Daftar transaksi yang akan diperbarui.
+     * @param payment         Metode pembayaran yang dipilih.
+     * @param transactionList Daftar transaksi yang akan diperbarui.
      */
     void checkout(Payment payment, List<Transaction> transactionList) {
         if (cart.isEmpty()) {
@@ -87,23 +101,24 @@ class Customer extends User {
 
         List<Product> selectedProducts = new ArrayList<>();
 
-        while (!selectedProductId.equalsIgnoreCase("selesai")) {
+        while (!selectedProductId.equalsIgnoreCase("Y")) {
             Product selectedProduct = getProductById(cart, selectedProductId);
 
             if (selectedProduct != null) {
                 selectedProducts.add(selectedProduct);
-                System.out.println(selectedProduct.name + " ditambahkan ke dalam daftar checkout.");
+                System.out.println(selectedProduct.name + " telah ditambahkan ke dalam daftar checkout.");
             } else {
-                System.out.println("\nProduk dengan ID " + selectedProductId + " tidak ditemukan dalam keranjang.");
+                System.out.println("\nProduk dengan ID " + selectedProductId + " tidak ada di keranjang");
             }
 
             System.out.println();
-            System.out.print("Pilih produk lain atau ketik 'selesai' : ");
+            System.out.print("Masukan id produk lain untuk CheckOut atau Selesai? (ketik Y) : ");
             selectedProductId = scanner.next();
+
         }
 
         if (selectedProducts.isEmpty()) {
-            System.out.println("\nTidak ada produk yang dipilih untuk checkout.");
+            System.out.println("\nProduk untuk checkout belum dipilih");
             return;
         }
 
@@ -111,10 +126,13 @@ class Customer extends User {
         System.out.println("Total Harga : " + transaction.getTotalAmount());
         transactionList.add(transaction);
         transactionHistory.add(transaction);
+
         // Memanggil metode processPayment untuk mengeksekusi logika pembayaran
         transaction.processPayment();
         System.out.println("\nTransaksi berhasil !");
-        transaction.cetakResi(); // Menambah pemanggilan cetakResi()
+
+        // cetak resi
+        transaction.cetakResi();
         cart.clear();
     }
 
@@ -129,14 +147,14 @@ class Customer extends User {
         System.out.println("|            Pilih Bank           |");
         System.out.println("=".repeat(35));
         System.out.println("| 1. BSI                          |");
-        System.out.println("| 2. Mandiri                      |");
-        System.out.println("| 3. Bank Aceh                    |");
-        System.out.println("| 4. BCA                          |");
+        System.out.println("| 2. Bank Aceh                    |");
+        System.out.println("| 3. Bank BRI                     |");
+        System.out.println("| 4. Bank Nagari                  |");
         System.out.println("=".repeat(35));
         System.out.print("Masukkan pilihan (1/2/3/4) : ");
     }
 
-     /**
+    /**
      * Menampilkan riwayat belanja customer.
      */
     void viewHistory() {
@@ -181,8 +199,8 @@ interface Authentication {
  * Implementasi Authentication untuk proses otentikasi login.
  */
 class User implements Authentication {
-    String username;    // Variable untuk menampung username user
-    String password;    // Variable untuk menampung password user
+    String username; // Variable untuk menampung username user
+    String password; // Variable untuk menampung password user
 
     // Konstruktor untuk membuat objek User dengan username dan password tertentu.
     User(String username, String password) {
@@ -201,9 +219,12 @@ class User implements Authentication {
 }
 
 /**
- * Kelas Admin adalah turunan dari kelas User dan digunakan untuk mengelola barang
- * dan melihat daftar transaksi. Admin memiliki akses ke beberapa menu pengelolaan
- * seperti menambah, melihat, mengedit, dan menghapus barang serta melihat daftar transaksi.
+ * Kelas Admin adalah turunan dari kelas User dan digunakan untuk mengelola
+ * barang
+ * dan melihat daftar transaksi. Admin memiliki akses ke beberapa menu
+ * pengelolaan
+ * seperti menambah, melihat, mengedit, dan menghapus barang serta melihat
+ * daftar transaksi.
  */
 class Admin extends User {
     static Scanner scanner = new Scanner(System.in);
@@ -216,12 +237,12 @@ class Admin extends User {
     /**
      * Metode untuk mengelola barang dan menu administrasi.
      *
-     * @param productList      Daftar produk yang akan dikelola.
-     * @param transactionList  Daftar transaksi yang akan dilihat.
+     * @param productList     Daftar produk yang akan dikelola.
+     * @param transactionList Daftar transaksi yang akan dilihat.
      */
     void manageProducts(List<Product> productList, List<Transaction> transactionList) {
         boolean isManagingProducts = true;
-        
+
         while (isManagingProducts) {
 
             // Tampilan menu admin
@@ -229,44 +250,44 @@ class Admin extends User {
             System.out.println("<".repeat(25) + " ADMIN MENU " + ">".repeat(25));
             System.out.println();
             System.out.println("=".repeat(36));
-            System.out.println("|   Menu Admin - Manage Products   |");
+            System.out.println("|   Menu Admin                     |");
             System.out.println("=".repeat(36));
             System.out.println("| 1. Tambah Barang                 |");
             System.out.println("| 2. Lihat Barang                  |");
             System.out.println("| 3. Edit Barang                   |");
             System.out.println("| 4. Hapus Barang                  |");
             System.out.println("| 5. Lihat Transaksi               |");
-            System.out.println("| 6. Kembali ke menu utama         |");
+            System.out.println("| 6. LogOut                        |");
             System.out.println("=".repeat(36));
             System.out.print("Pilih opsi (1/2/3/4/5/6) : ");
             int option = scanner.nextInt();
-            
+
             // Switch case untuk memproses pilihan user admin
             switch (option) {
                 case 1:
-                addProduct(productList);
-                break;
+                    addProduct(productList);
+                    break;
                 case 2:
-                viewProducts(productList);
-                break;
+                    viewProducts(productList);
+                    break;
                 case 3:
-                editProduct(productList);
-                break;
+                    editProduct(productList);
+                    break;
                 case 4:
-                deleteProduct(productList);
-                break;
+                    deleteProduct(productList);
+                    break;
                 case 5:
-                viewTransactions(transactionList);
-                break;
+                    viewTransactions(transactionList);
+                    break;
                 case 6:
-                isManagingProducts = false;
-                break;
+                    isManagingProducts = false;
+                    break;
                 default:
-                System.out.println("\nOpsi tidak valid.");
+                    System.out.println("\nSilahkan pilih 1-6!.");
             }
         }
     }
-    
+
     /**
      * Metode untuk menambahkan barang baru ke dalam daftar produk.
      *
@@ -286,7 +307,7 @@ class Admin extends User {
 
         Product newProduct = new Product(productId, productName, productPrice);
         productList.add(newProduct);
-        System.out.println("\nBarang berhasil ditambahkan !");
+        System.out.println("\nBarang berhasil ditambahkan!");
     }
 
     /**
@@ -330,9 +351,9 @@ class Admin extends User {
             productToEdit.name = newProductName;
             productToEdit.price = newProductPrice;
 
-            System.out.println("\nBarang berhasil di edit !");
+            System.out.println("\nBarang berhasil di edit!");
         } else {
-            System.out.println("\nBarang tidak ditemukan.");
+            System.out.println("\nBarang tidak ada!");
         }
     }
 
@@ -390,13 +411,14 @@ class Admin extends User {
 }
 
 /**
- * Kelas Product merepresentasikan barang yang dapat dibeli atau dikelola dalam sistem.
+ * Kelas Product merepresentasikan barang yang dapat dibeli atau dikelola dalam
+ * sistem.
  * Setiap produk memiliki ID unik, nama, dan harga.
  */
 class Product {
-    String id;   // Variable id unik untuk mengidentifikasi barang
+    String id; // Variable id unik untuk mengidentifikasi barang
     String name; // Variable nama barang
-    int price;   // Variable harga barang
+    int price; // Variable harga barang
 
     // Konstruktor untuk membuat objek Product dengan ID, nama, dan harga tertentu.
     Product(String id, String name, int price) {
@@ -408,23 +430,25 @@ class Product {
 
 /**
  * Kelas Transaction merepresentasikan transaksi pembelian barang oleh pengguna.
- * Setiap transaksi memiliki ID unik, pengguna yang melakukan transaksi, daftar barang,
+ * Setiap transaksi memiliki ID unik, pengguna yang melakukan transaksi, daftar
+ * barang,
  * metode pembayaran, dan total jumlah pembelian.
  */
 class Transaction {
-    static int counter = 1;   // Variable statis untuk menghitung jumlah transaksi dan id unik
-    int id;                   // Variable id untuk mengidentifikasi transaksi
-    User user;                // Variable user untuk yang melakukan transaksi    
-    List<Product> products;   // Variable daftar barang yang dibeli dalam transaksi    
-    Payment payment;          // Variable metode pembayaran yang digunakan dalam transaksi
-    int totalAmount;          // Variable total jumlah pembelian dalam transaksi
+    static int counter = 1; // Variable statis untuk menghitung jumlah transaksi dan id unik
+    int id; // Variable id untuk mengidentifikasi transaksi
+    User user; // Variable user untuk yang melakukan transaksi
+    List<Product> products; // Variable daftar barang yang dibeli dalam transaksi
+    Payment payment; // Variable metode pembayaran yang digunakan dalam transaksi
+    int totalAmount; // Variable total jumlah pembelian dalam transaksi
 
     // Mendapatkan total jumlah pembelian dalam transaksi.
     int getTotalAmount() {
         return totalAmount;
     }
 
-    // Konstruktor untuk membuat objek Transaction dengan pengguna, daftar barang, dan metode pembayaran tertentu.
+    // Konstruktor untuk membuat objek Transaction dengan pengguna, daftar barang,
+    // dan metode pembayaran tertentu.
     Transaction(User user, List<Product> products, Payment payment) {
         this.id = counter++;
         this.user = user;
@@ -435,6 +459,7 @@ class Transaction {
 
     /**
      * Menghitung total jumlah pembelian berdasarkan daftar barang dalam transaksi.
+     * 
      * @return Total jumlah pembelian.
      */
     private int calculateTotalAmount() {
@@ -447,7 +472,8 @@ class Transaction {
         payment.processPayment();
     }
 
-    // Mencetak struk pembayaran transaksi dengan detail pengguna, daftar barang, total jumlah pembelian, dan pesan terima kasih.
+    // Mencetak struk pembayaran transaksi dengan detail pengguna, daftar barang,
+    // total jumlah pembelian, dan pesan terima kasih.
     void cetakResi() {
         Main.clearScreen();
         System.out.println();
@@ -474,51 +500,60 @@ class Transaction {
     }
 }
 
-
 /**
- * Kelas abstrak Payment merepresentasikan suatu metode pembayaran yang dapat diimplementasikan
- * oleh kelas-kelas turunannya. Metode pembayaran umumnya memiliki proses pembayaran yang berbeda-beda.
- * Kelas ini dirancang untuk memberikan kerangka dasar untuk implementasi metode pembayaran.
+ * Kelas abstrak Payment merepresentasikan suatu metode pembayaran yang dapat
+ * diimplementasikan
+ * oleh kelas-kelas turunannya. Metode pembayaran umumnya memiliki proses
+ * pembayaran yang berbeda-beda.
+ * Kelas ini dirancang untuk memberikan kerangka dasar untuk implementasi metode
+ * pembayaran.
  */
 abstract class Payment {
 
     /**
      * Metode abstrak yang harus diimplementasikan oleh kelas turunan.
-     * Metode ini digunakan untuk menjalankan proses pembayaran sesuai dengan aturan metode pembayaran tertentu.
+     * Metode ini digunakan untuk menjalankan proses pembayaran sesuai dengan aturan
+     * metode pembayaran tertentu.
      */
     abstract void processPayment();
 }
 
-
 /**
- * Kelas QRIS merupakan turunan dari kelas Payment dan mengimplementasikan metode pembayaran
+ * Kelas QRIS merupakan turunan dari kelas Payment dan mengimplementasikan
+ * metode pembayaran
  * menggunakan QRIS.
- * Metode pembayaran ini hanya menampilkan pesan bahwa pembayaran sedang diproses menggunakan QRIS.
+ * Metode pembayaran ini hanya menampilkan pesan bahwa pembayaran sedang
+ * diproses menggunakan QRIS.
  */
 class QRIS extends Payment {
 
     /**
-     * Implementasi metode processPayment untuk melakukan pembayaran menggunakan QRIS.
-     * Metode ini hanya mencetak pesan bahwa pembayaran sedang diproses menggunakan QRIS.
+     * Implementasi metode processPayment untuk melakukan pembayaran menggunakan
+     * QRIS.
+     * Metode ini hanya mencetak pesan bahwa pembayaran sedang diproses menggunakan
+     * QRIS.
      */
     @Override
     void processPayment() {
-        System.out.println("\nMemproses pembayaran menggunakan QRIS...");
+        System.out.println("\n'Anda membayar dengan QRIS'");
     }
 
-    // Metode override dari toString untuk memberikan representasi string dari objek QRIS.
+    // Metode override dari toString untuk memberikan representasi string dari objek
+    // QRIS.
     public String toString() {
         return "QRIS";
     }
 }
 
 /**
- * Kelas Bank merupakan turunan dari kelas Payment dan menyediakan metode pembayaran melalui suatu bank.
- * Kelas ini memperoleh nama bank pada saat pembuatan objek dan menggunakan nama tersebut
+ * Kelas Bank merupakan turunan dari kelas Payment dan menyediakan metode
+ * pembayaran melalui suatu bank.
+ * Kelas ini memperoleh nama bank pada saat pembuatan objek dan menggunakan nama
+ * tersebut
  * dalam proses pembayaran dan representasi string.
  */
 class Bank extends Payment {
-    String bankName;  // Variable untuk nama bank yang digunakan untuk pembayaran
+    String bankName; // Variable untuk nama bank yang digunakan untuk pembayaran
 
     // Konstruktor untuk membuat objek Bank dengan menyimpan nama bank.
     Bank(String bankName) {
@@ -527,35 +562,41 @@ class Bank extends Payment {
 
     /**
      * Implementasi metode processPayment untuk melakukan pembayaran melalui bank.
-     * Metode ini mencetak pesan bahwa pembayaran sedang diproses melalui bank tertentu.
+     * Metode ini mencetak pesan bahwa pembayaran sedang diproses melalui bank
+     * tertentu.
      */
     @Override
     void processPayment() {
-        System.out.println("\nMemproses pembayaran melalui Bank " + bankName + "...");
+        System.out.println("\n'Anda membayar dengan " + bankName);
     }
 
-    // Metode override dari toString untuk memberikan representasi string dari objek Bank.
+    // Metode override dari toString untuk memberikan representasi string dari objek
+    // Bank.
     public String toString() {
         return "Bank " + bankName;
     }
 }
 
 /**
- * Kelas COD (Cash on Delivery) merupakan turunan dari kelas Payment dan menyediakan metode pembayaran tunai.
- * Kelas ini mengimplementasikan proses pembayaran tunai dan memberikan representasi string "COD".
+ * Kelas COD (Cash on Delivery) merupakan turunan dari kelas Payment dan
+ * menyediakan metode pembayaran tunai.
+ * Kelas ini mengimplementasikan proses pembayaran tunai dan memberikan
+ * representasi string "COD".
  */
 class COD extends Payment {
 
     /**
-     * Implementasi metode processPayment untuk melakukan pembayaran tunai (Cash on Delivery/COD).
+     * Implementasi metode processPayment untuk melakukan pembayaran tunai (Cash on
+     * Delivery/COD).
      * Metode ini mencetak pesan bahwa pembayaran sedang diproses secara tunai.
      */
     @Override
     void processPayment() {
-        System.out.println("\nMemproses pembayaran tunai (Cash on Delivery/COD)...");
+        System.out.println("\n'Anda COD'");
     }
 
-    // Metode override dari toString untuk memberikan representasi string dari objek COD.
+    // Metode override dari toString untuk memberikan representasi string dari objek
+    // COD.
     public String toString() {
         return "COD";
     }
@@ -563,7 +604,8 @@ class COD extends Payment {
 
 /**
  * Kelas utama yang menjalankan aplikasi ICESCAPE Shopping System.
- * Digunakan untuk menangani login, manajemen pengguna, dan interaksi dengan produk serta transaksi.
+ * Digunakan untuk menangani login, manajemen pengguna, dan interaksi dengan
+ * produk serta transaksi.
  */
 public class Main {
     static Scanner scanner = new Scanner(System.in);
@@ -578,10 +620,10 @@ public class Main {
     public void login() {
         List<Product> productList = new ArrayList<>();
         List<Transaction> transactionList = new ArrayList<>();
-        List<Customer> customerList = new ArrayList<>(); 
-        
-        Admin admin = new Admin("admin", "adminpass");
-        Customer customer = new Customer("user", "userpass");
+        List<Customer> customerList = new ArrayList<>();
+
+        Admin admin = new Admin("admin", "admin12345");
+        Customer customer = new Customer("user", "user12345");
 
         // Menambahkan data barang
         productList.add(new Product("A01", "Paracetamol", 2000));
@@ -604,36 +646,36 @@ public class Main {
         productList.add(new Product("D03", "Diclofenac", 12451));
         productList.add(new Product("D04", "Betamethasone", 3716));
         productList.add(new Product("D05", "Neomycin Ointment", 20900));
-        
+
         boolean isLoggedIn = true;
 
         while (isLoggedIn) {
-            
+
             // Tampilan menu awal
             clearScreen();
             System.out.println();
-            System.out.println("<".repeat(25) + " Selamat datang di ICESCAPE Shopping System " + ">".repeat(25));
+            System.out.println("<".repeat(25) + " Selamat datang di Online Apotek Nazwa dkk " + ">".repeat(25));
             System.out.println();
             System.out.println("=".repeat(35));
             System.out.println("|               Menu              |");
             System.out.println("=".repeat(35));
-            System.out.println("| 1. Login sebagai Admin          |");
-            System.out.println("| 2. Login sebagai Customer       |");
+            System.out.println("| 1. Login Customer               |");
+            System.out.println("| 2. Login Admin                  |");
             System.out.println("| 3. Buat Akun Customer           |");
-            System.out.println("| 4. Keluar dari aplikasi         |");
+            System.out.println("| 4. LogOut                       |");
             System.out.println("=".repeat(35));
-            System.out.print("Pilih opsi (1/2/3/4) : ");
+            System.out.print("Pilih: ");
             int option = scanner.nextInt();
 
             // Switch case untuk memproses pilihan user
             switch (option) {
                 case 1:
                     clearScreen();
-                    isLoggedIn = adminLogin(admin, productList, transactionList);
+                    isLoggedIn = customerLogin(customer, productList, transactionList);
                     break;
                 case 2:
                     clearScreen();
-                    isLoggedIn = customerLogin(customer, productList, transactionList);
+                    isLoggedIn = adminLogin(admin, productList, transactionList);
                     break;
                 case 3:
                     clearScreen();
@@ -668,7 +710,7 @@ public class Main {
                 admin.manageProducts(productList, transactionList);
                 isLoggedIn = true;
             } else {
-                System.out.println("\nLogin gagal. Username atau password salah.");
+                System.out.println("\nLogin gagal!. Username atau password salah!.");
             }
         } while (!isLoggedIn);
 
@@ -677,7 +719,7 @@ public class Main {
 
     // Fungsi untuk melakukan login sebagai customer.
     private static boolean customerLogin(Customer customer, List<Product> productList,
-        List<Transaction> transactionList) {
+            List<Transaction> transactionList) {
         boolean isLoggedIn = false;
 
         do {
@@ -695,7 +737,7 @@ public class Main {
                 customerMenu(customer, productList, transactionList);
                 isLoggedIn = true;
             } else {
-                System.out.println("\nLogin gagal. Username atau password salah.");
+                System.out.println("\nLogin gagal!. Username atau password salah!.");
             }
         } while (!isLoggedIn);
 
@@ -703,12 +745,14 @@ public class Main {
     }
 
     /**
-     * Fungsi untuk membuat akun pelanggan baru dan menambahkannya ke dalam daftar pelanggan.
-     * Setelah membuat akun, fungsi ini secara otomatis melakukan login menggunakan akun baru tersebut.
+     * Fungsi untuk membuat akun pelanggan baru dan menambahkannya ke dalam daftar
+     * pelanggan.
+     * Setelah membuat akun, fungsi ini secara otomatis melakukan login menggunakan
+     * akun baru tersebut.
      */
     private static void createAccount(List<Customer> customerList, List<Product> productList,
-        List<Transaction> transactionList) {
-        
+            List<Transaction> transactionList) {
+
         clearScreen();
         System.out.println();
         System.out.println("<".repeat(10) + " Create new account " + ">".repeat(10));
@@ -726,9 +770,12 @@ public class Main {
     }
 
     /**
-     * Fungsi untuk menampilkan menu utama dan mengelola interaksi pelanggan dengan aplikasi.
-     * Pengguna dapat melihat daftar barang, menambahkan barang ke keranjang, melihat keranjang,
-     * melakukan proses checkout, melihat riwayat belanja, dan kembali ke menu utama.
+     * Fungsi untuk menampilkan menu utama dan mengelola interaksi pelanggan dengan
+     * aplikasi.
+     * Pengguna dapat melihat daftar barang, menambahkan barang ke keranjang,
+     * melihat keranjang,
+     * melakukan proses checkout, melihat riwayat belanja, dan kembali ke menu
+     * utama.
      */
     private static void customerMenu(Customer customer, List<Product> productList, List<Transaction> transactionList) {
         boolean isLoggedIn = true;
@@ -745,17 +792,17 @@ public class Main {
             System.out.println("=".repeat(35));
             System.out.println("|          Menu Customer          |");
             System.out.println("=".repeat(35));
-            System.out.println("| 1. Lihat List Barang            |");
-            System.out.println("| 2. Masukkan Barang ke Keranjang |");
-            System.out.println("| 3. Lihat Keranjang              |");
-            System.out.println("| 4. Checkout                     |");
-            System.out.println("| 5. Lihat History Belanja        |");
-            System.out.println("| 6. Kembali ke menu utama        |");
+            System.out.println("| 1. List barang                  |");
+            System.out.println("| 2. Masukkan barang ke keranjang |");
+            System.out.println("| 3. Lihat keranjang              |");
+            System.out.println("| 4. CheckOut                     |");
+            System.out.println("| 5. History belanja              |");
+            System.out.println("| 6. LogOut                       |");
             System.out.println("=".repeat(35));
-            System.out.print("Pilih opsi (1/2/3/4/5/6) : ");
+            System.out.print("Pilih: ");
             int option = scanner.nextInt();
 
-            // Switch case untuk memproses pilihan user 
+            // Switch case untuk memproses pilihan user
             switch (option) {
                 case 1:
                     customer.viewProducts(productList);
@@ -840,7 +887,7 @@ public class Main {
                     break;
                 case 6:
                     isLoggedIn = false;
-                    System.out.println("\nLogging out..");
+                    System.out.println("\nLogging out!!!! Terimakasih sudah berbelanja!");
                     break;
                 default:
                     System.out.println("\nOpsi tidak valid.");
@@ -848,12 +895,16 @@ public class Main {
         }
     }
 
-    // Method untuk membersihkan layar ketika di enter
+    // Method untuk membersihkan layar ketika di enter {fix error}
     public static void clearScreen() {
         try {
+            // Membuat objek ProcessBuilder untuk menjalankan perintah shell
+            // Perintah shell yang digunakan bergantung pada sistem operasi
             new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
         } catch (IOException | InterruptedException e) {
+            // Menangani eksepsi yang mungkin terjadi
             e.printStackTrace();
         }
     }
+
 }
