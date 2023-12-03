@@ -1,6 +1,0 @@
-/**
- * Barang
- */
-class Barang {
-
-}
