@@ -496,7 +496,7 @@ class Transaction {
         System.out.println("-".repeat(35));
         System.out.println("Total Harga: " + totalAmount);
         System.out.println("-".repeat(35));
-        System.out.println("<".repeat(25) + "Terima kasih telah berbelanja di ICESCAPE" + ">".repeat(25));
+        System.out.println("<".repeat(25) + " Terima kasih telah berbelanja di ONLINE APOTEK <3 " + ">".repeat(25));
         System.out.println();
     }
 }
