@@ -259,7 +259,7 @@ class Admin extends User {
             System.out.println("| 5. Lihat Transaksi               |");
             System.out.println("| 6. LogOut                        |");
             System.out.println("=".repeat(36));
-            System.out.print("Pilih opsi (1/2/3/4/5/6) : ");
+            System.out.print("Pilih opsi: ");
             int option = scanner.nextInt();
 
             // Switch case untuk memproses pilihan user admin
@@ -333,7 +333,7 @@ class Admin extends User {
      */
     private void editProduct(List<Product> productList) {
         Main.clearScreen();
-        System.out.println();
+
         System.out.println("<".repeat(15) + " PENGEDITAN BARANG " + ">".repeat(15));
         System.out.println();
         System.out.print("Masukkan ID barang untuk edit barang : ");
@@ -364,7 +364,7 @@ class Admin extends User {
      */
     private void deleteProduct(List<Product> productList) {
         Main.clearScreen();
-        System.out.println();
+
         System.out.println("<".repeat(15) + " PENGHAPUSAN BARANG " + ">".repeat(15));
         System.out.println();
         System.out.print("Masukkan ID barang untuk hapus barang : ");
@@ -435,11 +435,12 @@ class Product {
  * metode pembayaran, dan total jumlah pembelian.
  */
 class Transaction {
-    static int counter = 1; // Variable statis untuk menghitung jumlah transaksi dan id unik
-    int id; // Variable id untuk mengidentifikasi transaksi
     User user; // Variable user untuk yang melakukan transaksi
     List<Product> products; // Variable daftar barang yang dibeli dalam transaksi
     Payment payment; // Variable metode pembayaran yang digunakan dalam transaksi
+
+    static int counter = 1; // Variable statis untuk menghitung jumlah transaksi dan id unik
+    int id; // Variable id untuk mengidentifikasi transaksi
     int totalAmount; // Variable total jumlah pembelian dalam transaksi
 
     // Mendapatkan total jumlah pembelian dalam transaksi.
@@ -609,12 +610,6 @@ class COD extends Payment {
  */
 public class Main {
     static Scanner scanner = new Scanner(System.in);
-
-    // Metode utama yang memulai aplikasi dan memanggil fungsi login.
-    public static void main(String[] args) {
-        Main main = new Main();
-        main.login();
-    }
 
     // Fungsi untuk menangani login dan menu utama aplikasi.
     public void login() {
@@ -841,7 +836,7 @@ public class Main {
                     System.out.println("| 2. Bank                         |");
                     System.out.println("| 3. COD                          |");
                     System.out.println("=".repeat(35));
-                    System.out.print("Masukkan pilihan (1/2/3) : ");
+                    System.out.print("Pilih: ");
                     int paymentOption = scanner.nextInt();
 
                     // Set objek pembayaran berdasarkan pilihan
@@ -858,13 +853,13 @@ public class Main {
                                     payment = new Bank("BSI");
                                     break;
                                 case 2:
-                                    payment = new Bank("Mandiri");
-                                    break;
-                                case 3:
                                     payment = new Bank("Bank Aceh");
                                     break;
+                                case 3:
+                                    payment = new Bank("Bank BRI");
+                                    break;
                                 case 4:
-                                    payment = new Bank("BCA");
+                                    payment = new Bank("Bank Nagari");
                                     break;
                                 default:
                                     System.out.println("\nPilihan bank tidak valid.");
@@ -905,6 +900,12 @@ public class Main {
             // Menangani eksepsi yang mungkin terjadi
             e.printStackTrace();
         }
+    }
+
+    // Metode utama yang memulai aplikasi dan memanggil fungsi login.
+    public static void main(String[] args) {
+        Main main = new Main();
+        main.login();
     }
 
 }
