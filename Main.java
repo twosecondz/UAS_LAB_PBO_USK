@@ -250,7 +250,7 @@ class Admin extends User {
             System.out.println("<".repeat(25) + " ADMIN MENU " + ">".repeat(25));
             System.out.println();
             System.out.println("=".repeat(36));
-            System.out.println("|   Menu Admin                     |");
+            System.out.println("|            Menu Admin            |");
             System.out.println("=".repeat(36));
             System.out.println("| 1. Tambah Barang                 |");
             System.out.println("| 2. Lihat Barang                  |");
