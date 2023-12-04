@@ -343,9 +343,9 @@ class Admin extends User {
 
         // Permisalan jika user meng input id barang yang barangnya tidak ada dan ada
         if (productToEdit != null) {
-            System.out.print("Masukkan nama barang baru : ");
+            System.out.print("Masukkan nama barang baru            : ");
             String newProductName = scanner.nextLine();
-            System.out.print("Masukkan harga barang baru : ");
+            System.out.print("Masukkan harga barang baru           : ");
             int newProductPrice = scanner.nextInt();
 
             productToEdit.name = newProductName;
