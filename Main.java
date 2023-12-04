@@ -647,7 +647,6 @@ public class Main {
         while (isLoggedIn) {
 
             // Tampilan menu awal
-            clearScreen();
             System.out.println();
             System.out.println("<".repeat(25) + " Selamat datang di Online Apotek Nazwa dkk " + ">".repeat(25));
             System.out.println();
